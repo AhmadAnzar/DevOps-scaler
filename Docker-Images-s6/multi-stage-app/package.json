@@ -1,0 +1,13 @@
+{
+  "name": "docker-multi-stage-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A small Node.js application for practising multi-stage Docker builds",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "5.1.0"
+  }
+}
