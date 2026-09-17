@@ -25,3 +25,26 @@
 ### imagepullbackoff
 
 ![alt text](image-6.png)
+
+### PORT FORWARDING
+
+![alt text](image-7.png)
+
+![alt text](image-8.png)
+
+### DEPLOYMENT
+
+![alt text](image-9.png)
+
+### TROUBLESHOOTING
+
+![alt text](image-10.png)
+![alt text](image-12.png)
+
+### SELECTOR MISMATCH
+
+![alt text](image-13.png)
+
+### REPLICASET SCALING
+
+![alt text](image-14.png)
