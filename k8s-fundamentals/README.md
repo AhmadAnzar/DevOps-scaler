@@ -1,7 +1,7 @@
 ### Muhammad Anzar Ahmad (24bcs10289)
 
 ### basic minikube commands
-![alt text](image.png)
+![Minikube setup output](images/minikube-setup.png)
 
 ```bash
 minikube start
