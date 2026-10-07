@@ -235,4 +235,4 @@ if __name__ == "__main__":
     # through the Werkzeug debugger. Only turn it on locally with FLASK_DEBUG=1.
     debug = os.environ.get("FLASK_DEBUG") == "1"
     # 0.0.0.0 is needed so the app is reachable from outside the container
-    app.run(host="0.0.0.0", port=5001, debug=True)  # nosec B104
+    app.run(host="0.0.0.0", port=5001, debug=debug)  # nosec B104

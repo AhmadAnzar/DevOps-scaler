@@ -133,19 +133,19 @@ docker run --rm -p 5001:5001 session17
 
 ### Successful run
 
-<!-- ![Pipeline success](images/pipeline-success.png) -->
+![Pipeline success](images/pipeline-success.png)
 
 ### Security gate summary
 
-<!-- ![Security gate](images/security-gate.png) -->
+![Security gate](images/security-gate.png)
 
 ### Trivy image scan
 
-<!-- ![Trivy scan](images/trivy-scan.png) -->
+![Trivy scan](images/trivy-scan.png)
 
 ### Deployed to Kubernetes
 
-<!-- ![Deploy](images/deploy.png) -->
+![Deploy](images/deploy.png)
 
 ### Security gate blocking a bad commit
 
@@ -153,7 +153,24 @@ To see the gate actually block something, I put `debug=True` back and
 pushed. Bandit failed, so the image scan, gate, push and deploy were all
 skipped. Then I reverted it and the pipeline went green again.
 
-<!-- ![Gate blocked](images/gate-blocked.png) -->
+![Gate blocked](images/gate-blocked.png)
+
+![Bandit finding](images/gate-blocked2.png)
+
+## Problems I ran into
+
+**Security Gate and Push failed to start.** I had set
+`working-directory: Session-17` for the whole workflow, but those two jobs
+don't check out the code, so the folder didn't exist on their runner and
+bash couldn't even start. I gave those two jobs their own
+`working-directory: .` and they worked.
+
+**Push denied with `permission_denied: write_package`.** All the scans passed
+but the push to ghcr.io kept getting denied. The package had been created on
+the first run, but my repo wasn't in its "Manage Actions access" list, so the
+workflow's `GITHUB_TOKEN` couldn't write to it. I added `DevOps-scaler` with
+the Write role in the package settings, re-ran the failed jobs, and the push
+and deploy both passed.
 
 ## Conclusion
 

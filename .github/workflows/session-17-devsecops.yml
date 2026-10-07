@@ -177,8 +177,7 @@ jobs:
       - name: Push image
         run: |
           docker tag "$IMAGE:${{ github.sha }}" "$IMAGE:latest"
-          # ghcr can deny a push right after a new package is created,
-          # because its permissions take a few seconds to catch up, so retry
+          # retry a couple of times in case ghcr.io has a temporary error
           for tag in "${{ github.sha }}" latest; do
             for attempt in 1 2 3; do
               docker push "$IMAGE:$tag" && break
