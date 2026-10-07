@@ -1,0 +1,109 @@
+name: Session 16 CI/CD
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "Session-16/**"
+      - ".github/workflows/session-16-cicd.yml"
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "Session-16/**"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: Session-16
+
+env:
+  IMAGE: ghcr.io/ahmadanzar/session16-calculator
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest -v
+
+  security-check:
+    name: Security Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Look for sensitive files
+        run: |
+          if find . -type f \( -name ".env" -o -name "*.pem" -o -name "*.key" \) | grep -q .; then
+            echo "Sensitive file found, failing the pipeline."
+            exit 1
+          fi
+          echo "No sensitive files found."
+
+  build:
+    name: Build
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Run build script
+        run: |
+          chmod +x build.sh
+          ./build.sh
+          cat build/build-info.txt
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: calculator-build
+          path: Session-16/build/
+
+  deploy:
+    name: Docker Build and Push (CD)
+    needs: [build, security-check]
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: Session-16
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ github.sha }}
+
+      - name: Smoke test the pushed image
+        run: docker run --rm ${{ env.IMAGE }}:${{ github.sha }} python -c "from app.calculator import add; print('2 + 3 =', add(2, 3))"
