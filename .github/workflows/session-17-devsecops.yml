@@ -125,6 +125,10 @@ jobs:
     name: Security Gate
     needs: [build-test, sast, sca, secret-scan, docker-build-scan]
     runs-on: ubuntu-latest
+    # no checkout in this job, so Session-17/ doesn't exist here
+    defaults:
+      run:
+        working-directory: .
     steps:
       - name: All checks passed
         run: |
@@ -149,6 +153,10 @@ jobs:
     permissions:
       contents: read
       packages: write
+    # no checkout in this job either
+    defaults:
+      run:
+        working-directory: .
     steps:
       - name: Download scanned image
         uses: actions/download-artifact@v4
