@@ -1,6 +1,7 @@
 # Docker Images
 
-**Name:** Anzar, 24BCS10289
+Name: Anzar
+Enrollment Number: 24BCS10289
 
 ## Multi-stage Node.js image
 
@@ -11,7 +12,7 @@ cd "Docker Images/multi-stage-app"
 docker build -t multi-stage-hello .
 docker run -d --name multi-stage-hello -p 8080:3000 multi-stage-hello
 ```
-The  message appeared when I opened `http://localhost:8080` in the browser.
+Hello World from Docker multi-stage build appeared when I opened http://localhost:8080 in the browser.
 
 ![Application running in the browser](browser-output.png)
 ```bash

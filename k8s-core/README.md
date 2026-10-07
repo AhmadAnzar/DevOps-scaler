@@ -1,4 +1,7 @@
-### Muhammad Anzar Ahmad (24bcs10289)
+# Kubernetes Pods, ReplicaSets and Deployments
+
+Name: Anzar
+Enrollment Number: 24BCS10289
 
 ## Kubernetes Core Objects
 
@@ -142,3 +145,50 @@ StatefulSets and DaemonSets are used instead of Deployments when the application
 When a Pod is not working, check its status first. `kubectl describe pod <pod-name>` shows scheduling messages and container events. An `ImagePullBackOff` status usually points to an image name or registry problem. A `CrashLoopBackOff` status usually means the application starts and then exits or fails repeatedly.
 
 For a Deployment or ReplicaSet, check the labels and selectors if the expected Pods are not being managed. Also check that the requested image, container command, and replica count are correct.
+
+## Useful Commands
+
+Apply the example files:
+
+```bash
+kubectl apply -f pod.yml
+kubectl apply -f hello.yml
+kubectl apply -f replicaset.yml
+kubectl apply -f deployment.yml
+kubectl apply -f service.yml
+```
+
+Check the objects and the Pods:
+
+```bash
+kubectl get pods
+kubectl get replicasets
+kubectl get deployments
+kubectl get services
+kubectl get all
+```
+
+Inspect an object when something is not working:
+
+```bash
+kubectl describe pod <pod-name>
+kubectl describe deployment <deployment-name>
+kubectl logs <pod-name>
+```
+
+Remove the example objects after practice:
+
+```bash
+kubectl delete -f pod.yml
+kubectl delete -f hello.yml
+kubectl delete -f replicaset.yml
+kubectl delete -f deployment.yml
+kubectl delete -f service.yml
+```
+
+## Conclusion
+
+Pods run containers, ReplicaSets keep the required number of Pods running, and
+Deployments manage application updates. Services provide a stable way to reach
+the Pods. Together, these objects form the basic structure of a Kubernetes
+application.

@@ -1,6 +1,7 @@
 # Docker Networking and Bind Mounts
 
-**Name:** Anzar, 24BCS10289
+Name: Anzar
+Enrollment Number: 24BCS10289
 
 ## 1. Container networking
 | Container | Image | Networks |
@@ -68,3 +69,10 @@ curl -s http://localhost:8082 | grep '<h1>'
 
 ![Bind mount and restart count](t3-bind-mount.png)
 ![Updated bind-mounted page](t3-updated-page.png)
+
+## 4. Overlay network
+
+An overlay network connects containers running on different Docker hosts. It
+is useful when an application is spread across multiple machines, such as in
+Docker Swarm. Docker handles the communication between hosts so the containers
+can talk to each other as if they were on the same network.

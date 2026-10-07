@@ -1,53 +1,89 @@
 # Shell Scripting
 
-**Name:** Anzar,  24BCS10289
+Name: Anzar
+Enrollment Number: 24BCS10289
 
-These Bash scripts practise working with files, input, variables, functions, conditions, and loops.
+These Bash scripts practise file operations, input, variables, functions,
+conditions, loops, and system information.
 
-## 1. Create a folder and file - hello.sh
+Run the commands from the `Shell-s2` directory:
+
 ```bash
-#!/usr/bin/env bash
-mkdir -p hello
-printf '%s\n' "This is my logfile" > hello/app.log
-cat hello/app.log
-```
-```
-ubuntu@ip-172-31-38-20:~/devops-2028/shellscripting$ ./hello.sh
-This is my logfile
+cd Shell-s2
 ```
 
-## 2. Overwrite a file - data.sh
+## 1. Create a folder and file
+
+File: `hello.sh`
+
 ```bash
-#!/usr/bin/env bash
-mkdir -p data
-printf '%s\n' "This is a log file." > data/app.log
-cat data/app.log
-printf '%s\n' "This is my file" > data/app.log
-cat data/app.log
-```
-```
-ubuntu@ip-172-31-38-20:~/devops-2028/shellscripting$ ./data.sh
-This is a log file.
-This is my file
+bash hello.sh
 ```
 
-## 3. Append to a file - script1.sh
+Commands used:
+
 ```bash
-#!/usr/bin/env bash
 mkdir -p test
-echo "This is file1" > test/app.log
-echo "This is file2" >> test/app.log
-cat test/app.log
-```
-```
-ubuntu@ip-172-31-38-20:~/devops-2028/shellscripting$ ./script1.sh
-This is file1
-This is file2
+cd test
+echo "This is my logfile" > app.log
+echo "Initial content set: $(cat app.log)"
+read -r user_input
+echo "$user_input" > app.log
+cat app.log
 ```
 
-## 4. Take input - input.sh
+## 2. Overwrite a file
+
+File: `data.sh`
+
 ```bash
-#!/usr/bin/env bash
+bash data.sh
+```
+
+Commands used:
+
+```bash
+mkdir -p data1
+cd data1
+echo "This is a log file." > app.log
+cat app.log
+echo "This is my file" > app.log
+cat app.log
+```
+
+The `>` operator overwrites the existing file content.
+
+## 3. Append to a file
+
+File: `script1.sh`
+
+```bash
+bash script1.sh
+```
+
+Commands used:
+
+```bash
+mkdir -p test
+cd test
+echo "This is file1" > app.log
+echo "This is file2" >> app.log
+cat app.log
+```
+
+The `>>` operator appends content without deleting the existing content.
+
+## 4. Take user input
+
+File: `input.sh`
+
+```bash
+bash input.sh
+```
+
+Commands used:
+
+```bash
 read -r -p "Enter your name: " name
 read -r -p "Enter your roll number: " roll_number
 read -r -p "Enter your comment: " comment
@@ -56,144 +92,137 @@ echo "My name is $name"
 echo "My roll number is $roll_number"
 echo "My comment is: $comment"
 ```
-```
-ubuntu@ip-172-31-38-20:~/devops-2028/shellscripting$ ./input.sh
-Enter your name: Anzar
-Enter your roll number: 24BCS10289
-Enter your comment: linux
-My name is Anzar
-My roll number is 24BCS10289
-My comment is: linux
-```
-## 5. Variables - variable.sh
+
+## 5. Use variables
+
+File: `variable.sh`
+
 ```bash
-#!/usr/bin/env bash
+bash variable.sh
+```
+
+Commands used:
+
+```bash
 name="Anzar"
-roll_number="24BCS10289"
-comment="learning Bash"
-echo "My name is $name"
-echo "My roll number is $roll_number"
-echo "I am $comment
+roll="123"
+comment="This class is awesome"
+
+echo -e "Name: $name\nRoll: $roll\nComment: $comment"
 ```
-## 6. Function - function.sh
+
+## 6. Use a function
+
+File: `function.sh`
+
 ```bash
-#!/usr/bin/env bash
+bash function.sh
+```
+
+Commands used:
+
+```bash
 show_info() {
-	echo "This is a function"
+    echo "This is a function"
+    echo "This is a function to show information"
 }
+
+show_info
 ```
 
-## 7. For loop - loop.sh
+## 7. Use a `for` loop
+
+File: `loop.sh`
+
 ```bash
-#!/usr/bin/env bash
-for ((i=0;i<=5;i++)); do
-	echo "This is iteration number $i"
+bash loop.sh
+```
+
+Commands used:
+
+```bash
+for i in {1..5}
+do
+    echo "This is iteration number $i"
 done
 ```
-## 8. System report - system_info.sh
+
+## 8. Create a system information report
+
+File: `task.sh`
+
 ```bash
-#!/usr/bin/env bash
-read -r -p "Enter your name: " name
-read -r -p "Enter your roll number: " roll_number
-read -r -p "Enter your comment: " comment
-current_date=$(date)
-host_name=$(hostname)
-user_name=$(whoami)
-report_directory="system_report"
-process_file="$report_directory/processes.txt"
-
-mkdir -p "$report_directory"
-touch "$process_file"
-
-echo ""
-echo "=== System Information ==="
-echo "Current date: $current_date"
-echo "Hostname: $host_name"
-echo "Username: $user_name"
-
-echo ""
-echo "=== Disk Usage ==="
-df -h
-
-echo ""
-echo "=== Running Processes ==="
-ps aux > "$process_file"
-echo "Process information saved to $process_file"
-cat "$process_file"
-
-echo ""
-echo "=== User Details ==="
-echo "My name is $name"
-echo "My roll number is $roll_number"
-echo "My comment is: $comment"
+bash task.sh
 ```
 
-**Sample input:** `Anzar`, `24BCS10289`, `Learning Bash`
+Commands used:
 
-```
-ubuntu@ip-172-31-38-20:~/devops-2028/shellscripting$ ./system_info.sh
-Enter your name: Anzar
-Enter your roll number: 24BCS10289
-Enter your comment: Learning Bash
-
-=== System Information ===
-Current date: Mon Aug 31 12:45:20 UTC 2026
-Hostname: ip-172-31-38-20
-Username: ubuntu
-
-=== Disk Usage ===
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/root       7.6G  2.4G  5.2G  32% /
-tmpfs           475M     0  475M   0% /dev/shm
-
-=== Running Processes ===
-Process information saved to system_report/processes.txt
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-root         1  0.0  0.5  21932 12840 ?        Ss   10:29   0:02 /sbin/init
-ubuntu    2481  0.0  0.2  17820  6120 pts/0    Ss   12:42   0:00 -bash
-[more processes follow]
-
-=== User Details ===
-My name is Anzar
-My roll number is 24BCS10289
-My comment is: Learning Bash
-```
-
-## 9. If-else condition - `condition.sh`
 ```bash
-#!/usr/bin/env bash
-read -r -p "Enter your age: " age
+mkdir -p task
+cd task
+echo "Current Date: $(date)" > task.log
+echo "Process: $(ps)" >> task.log
+echo "Hostname: $(hostname) and username $(whoami)" >> task.log
+echo "Process Info: $(ps)" > process.log
+echo "Disk usage: $(df -h)" >> process.log
+```
+
+The script writes the current date, process information, hostname, username,
+and disk usage to files.
+
+## 9. Use an `if` condition
+
+File: `condition.sh`
+
+```bash
+bash condition.sh
+```
+
+Commands used:
+
+```bash
+read -p "Enter your age: " age
+
 if [ "$age" -lt 0 ]; then
-	echo "Invalid age. Please enter a valid age."
+    echo "Invalid age. Please enter a valid age."
+elif [ "$age" -lt 13 ]; then
+    echo "You are a child."
+elif [ "$age" -lt 20 ]; then
+    echo "You are a teenager."
 else
-	echo "You are an adult."
+    echo "You are an adult."
+fi
 ```
-```
-ubuntu@ip-172-31-38-20:~/devops-2028/shellscripting$ ./condition.sh
-Enter your age: 21
-You are an adult.
-```
-## 10. While loop with input - while_loop.sh
+
+## 10. Use a `while` loop with input
+
+File: `while-loop.sh`
+
 ```bash
-#!/usr/bin/env bash
+bash while-loop.sh
+```
+
+Commands used:
+
+```bash
 while true; do
-	read -r -p "Enter a number (or 'q' to quit): " input
+    read -r -p "Enter a number (or 'q' to quit): " input
 
-	if [[ "$input" == "q" ]]; then
-		echo "Exiting the loop."
-		break
-	elif ! [[ "$input" =~ ^[0-9]+$ ]]; then
-		echo "Invalid input. Please enter a valid number."
-		continue
-	fi
+    if [[ "$input" == "q" ]]; then
+        echo "Exiting the loop."
+        break
+    elif ! [[ "$input" =~ ^[0-9]+$ ]]; then
+        echo "Invalid input. Please enter a valid number."
+        continue
+    fi
 
-	echo "You entered: $input"
+    echo "You entered: $input"
 done
 ```
-```
-ubuntu@ip-172-31-38-20:~/devops-2028/shellscripting$ ./while_loop.sh
-Enter a number (or 'q' to quit): 7
-You entered: 7
-Enter a number (or 'q' to quit): q
-Exiting the loop.
-```
+
+## Summary
+
+This session covers Bash variables, user input, file creation, output
+redirection, appending, functions, conditions, and loops. The scripts also
+use common system commands such as `date`, `hostname`, `whoami`, `df`, and
+`ps`.

@@ -1,6 +1,7 @@
 # Git and GitHub
 
-**Name:** Anzar, 24BCS10289
+Name: Anzar
+Enrollment Number: 24BCS10289
 ## 1. `git commit -a -m` vs `git commit -m`
 
 | Command | What it does |
@@ -68,4 +69,3 @@ git log --graph --oneline --decorate --all
 The graph shows both branches and the commit copied to `main` with `cherry-pick`.
 
 ![Git history](image.png)
-

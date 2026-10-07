@@ -1,4 +1,5 @@
-### Muhammad Anzar Ahmad (24bcs10289)
+Name: Anzar
+Enrollment Number: 24BCS10289
 
 # Kubernetes Ingress, ConfigMaps and Secrets
 

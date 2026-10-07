@@ -1,6 +1,7 @@
 # Networking Fundamentals
 
-**Name:** Anzar, 10289
+Name: Anzar
+Enrollment Number: 24BCS10289
 
 ## 1. Ping
 
