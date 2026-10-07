@@ -1,0 +1,7 @@
+tests/
+k8s/
+images/
+**/__pycache__/
+.coverage
+.pytest_cache/
+README.md
