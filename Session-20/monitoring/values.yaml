@@ -1,0 +1,31 @@
+# kube-prometheus-stack settings for a local kind cluster
+
+grafana:
+  # local demo only, never commit a real password
+  adminPassword: admin123
+
+prometheus:
+  prometheusSpec:
+    retention: 1d
+    resources:
+      requests:
+        memory: 400Mi
+
+alertmanager:
+  enabled: true
+
+# node-exporter can't mount the host root on Docker Desktop / kind
+prometheus-node-exporter:
+  hostRootFsMount:
+    enabled: false
+
+# these control plane parts aren't reachable on kind and would only
+# show up as false "target down" alerts
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeProxy:
+  enabled: false

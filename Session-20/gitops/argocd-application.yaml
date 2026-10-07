@@ -1,0 +1,21 @@
+# kept outside app/ so Argo CD doesn't try to sync itself
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: anzar-gitops-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/AhmadAnzar/DevOps-scaler.git
+    targetRevision: master
+    path: Session-20/gitops/app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gitops-demo
+  syncPolicy:
+    automated:
+      # delete things from the cluster that were removed from git
+      prune: true
+      # undo manual changes made with kubectl
+      selfHeal: true

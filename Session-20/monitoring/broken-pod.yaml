@@ -1,0 +1,9 @@
+# used to trigger the PodStuckWaiting alert
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alert-test
+spec:
+  containers:
+    - name: app
+      image: nginx:this-tag-does-not-exist
