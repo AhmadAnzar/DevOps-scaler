@@ -102,15 +102,15 @@ docker run --rm -it session16-calculator
 
 ### Successful run
 
-<!-- ![Successful pipeline](images/run-success.png) -->
+![Successful pipeline](images/run-success.png)
 
 ### Build artifact
 
-<!-- ![Build artifact](images/run-artifact.png) -->
+![Build artifact](images/run-artifact.png)
 
 ### CD job: image pushed and tested
 
-<!-- ![Docker build and push](images/deploy-log.png) -->
+![Docker build and push](images/deploy-log.png)
 
 ### Failing run
 
@@ -127,7 +127,9 @@ were skipped, so no broken image got pushed. Security Check still ran because
 it doesn't depend on Test. Then I put the function back and pushed again, and
 everything went green.
 
-<!-- ![Failed pipeline](images/run-failed.png) -->
+![Failed pipeline](images/run-failed.png)
+
+![Failed test output](images/run-failed2.png)
 
 ## Conclusion
 
