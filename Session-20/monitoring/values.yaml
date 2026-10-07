@@ -14,6 +14,14 @@ prometheus:
 alertmanager:
   enabled: true
 
+# the webhook cert job pulls its image from ghcr.io, which kept failing DNS
+# on my network. The webhook only validates rules, so it's safe to skip.
+prometheusOperator:
+  admissionWebhooks:
+    enabled: false
+  tls:
+    enabled: false
+
 # node-exporter can't mount the host root on Docker Desktop / kind
 prometheus-node-exporter:
   hostRootFsMount:

@@ -1,0 +1,22 @@
+terraform {
+  required_version = ">= 1.5"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = var.region
+
+  # every resource gets these tags automatically
+  default_tags {
+    tags = {
+      Project   = "session19"
+      ManagedBy = "Terraform"
+    }
+  }
+}
