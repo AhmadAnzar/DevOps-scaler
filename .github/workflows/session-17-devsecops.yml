@@ -177,8 +177,16 @@ jobs:
       - name: Push image
         run: |
           docker tag "$IMAGE:${{ github.sha }}" "$IMAGE:latest"
-          docker push "$IMAGE:${{ github.sha }}"
-          docker push "$IMAGE:latest"
+          # ghcr can deny a push right after a new package is created,
+          # because its permissions take a few seconds to catch up, so retry
+          for tag in "${{ github.sha }}" latest; do
+            for attempt in 1 2 3; do
+              docker push "$IMAGE:$tag" && break
+              if [ "$attempt" = 3 ]; then exit 1; fi
+              echo "push of $tag failed, retrying in 15s..."
+              sleep 15
+            done
+          done
 
   deploy:
     name: Deploy to Kubernetes
