@@ -24,3 +24,6 @@ test.db
 # OS junk
 .DS_Store
 Thumbs.db
+.coverage
+htmlcov/
+.ruff_cache/

@@ -1,7 +1,10 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from sqlalchemy import DateTime, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
+
 from .db import Base
+
 
 class Profile(Base):
     """A student's listing on GitTogether."""
@@ -16,4 +19,4 @@ class Profile(Base):
     year: Mapped[int | None] = mapped_column(Integer, nullable=True)
     availability: Mapped[str] = mapped_column(String(20), default="OPEN_TO_TEAM")
     visibility: Mapped[str] = mapped_column(String(10), default="PUBLIC")
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC))

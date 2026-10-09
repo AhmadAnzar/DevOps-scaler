@@ -1,0 +1,12 @@
+target-version = "py312"
+line-length = 130
+extend-exclude = ["alembic/versions"]
+
+[lint]
+# pycodestyle, pyflakes, import sorting, bugbear, pyupgrade, simplify
+select = ["E", "W", "F", "I", "B", "UP", "SIM"]
+# FastAPI's Depends()/Query() in argument defaults is the framework's documented pattern.
+ignore = ["B008"]
+
+[lint.isort]
+known-first-party = ["app"]
