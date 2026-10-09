@@ -1,0 +1,26 @@
+.idea/
+.vscode/
+node_modules/
+dist/
+target/
+*.log
+.env
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.db
+
+# Local dev / test artifacts
+.venv/
+venv/
+.pytest_cache/
+test.db
+
+# OS junk
+.DS_Store
+Thumbs.db
