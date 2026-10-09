@@ -1,12 +1,19 @@
 import re
 from datetime import datetime
-from typing import Literal
-from pydantic import BaseModel, Field, field_validator
+from typing import Annotated, Literal
+
+from pydantic import BaseModel, Field, StringConstraints, field_validator
 
 Availability = Literal["OPEN_TO_TEAM", "BUSY", "NOT_LOOKING"]
 Visibility = Literal["PUBLIC", "LIMITED"]
 
 MAX_SKILLS = 15
+
+# Whitespace is trimmed before length checks, so "   " is rejected as an empty name.
+Name = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)]
+Bio = Annotated[str, StringConstraints(strip_whitespace=True, max_length=500)]
+Department = Annotated[str, StringConstraints(strip_whitespace=True, max_length=80)]
+
 LINKEDIN_RE = re.compile(r"^https://(www\.)?linkedin\.com/in/[A-Za-z0-9_%-]+/?$")
 
 def clean_skills(value: list[str] | str | None) -> list[str] | None:
@@ -33,11 +40,11 @@ def check_linkedin(value: str | None) -> str | None:
     return value
 
 class ProfileCreate(BaseModel):
-    name: str = Field(min_length=1, max_length=120)
-    bio: str = Field(default="", max_length=500)
+    name: Name
+    bio: Bio = ""
     skills: list[str] = []
     linkedin_url: str = ""
-    department: str = Field(default="", max_length=80)
+    department: Department = ""
     year: int | None = Field(default=None, ge=1, le=6)
     availability: Availability = "OPEN_TO_TEAM"
     visibility: Visibility = "PUBLIC"
@@ -46,11 +53,11 @@ class ProfileCreate(BaseModel):
     _linkedin = field_validator("linkedin_url")(check_linkedin)
 
 class ProfileUpdate(BaseModel):
-    name: str | None = Field(default=None, min_length=1, max_length=120)
-    bio: str | None = Field(default=None, max_length=500)
+    name: Name | None = None
+    bio: Bio | None = None
     skills: list[str] | None = None
     linkedin_url: str | None = None
-    department: str | None = Field(default=None, max_length=80)
+    department: Department | None = None
     year: int | None = Field(default=None, ge=1, le=6)
     availability: Availability | None = None
     visibility: Visibility | None = None
