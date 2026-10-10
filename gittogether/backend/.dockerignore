@@ -4,3 +4,10 @@ __pycache__/
 .venv/
 test.db
 .git/
+tests/
+requirements-dev.txt
+ruff.toml
+pytest.ini
+.coverage
+htmlcov/
+.ruff_cache/

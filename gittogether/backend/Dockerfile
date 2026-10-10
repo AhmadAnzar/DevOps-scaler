@@ -8,4 +8,5 @@ COPY alembic ./alembic
 COPY app ./app
 USER 10001
 EXPOSE 8000
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+# exec replaces the shell, so uvicorn is PID 1 and gets SIGTERM for a graceful shutdown.
+CMD ["sh", "-c", "alembic upgrade head && exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers"]

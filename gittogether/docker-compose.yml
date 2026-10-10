@@ -1,16 +1,18 @@
+# Local development stack. Credentials come from .env (copy .env.example); the defaults
+# below are for local use only. Real deployments get them from Kubernetes Secrets.
 services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: gittogether
-      POSTGRES_USER: gittogether
-      POSTGRES_PASSWORD: gittogether
-    ports:
-      - "5432:5432"
+      POSTGRES_DB: ${POSTGRES_DB:-gittogether}
+      POSTGRES_USER: ${POSTGRES_USER:-gittogether}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-gittogether}
+    # No published port: only the backend reaches Postgres, over the Compose network.
+    # Inspect the data with: docker compose exec postgres psql -U gittogether
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U gittogether -d gittogether"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -18,17 +20,25 @@ services:
   backend:
     build: ./backend
     environment:
-      DATABASE_URL: postgresql+psycopg://gittogether:gittogether@postgres:5432/gittogether
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-gittogether}:${POSTGRES_PASSWORD:-gittogether}@postgres:5432/${POSTGRES_DB:-gittogether}
     depends_on:
       postgres:
         condition: service_healthy  # wait for Postgres before running Alembic migrations
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      # The slim image has no curl, so use Python to hit the readiness endpoint.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/ready', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
   frontend:
     build: ./frontend
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     ports:
       - "3000:8080"  # nginx-unprivileged listens on 8080 inside the container
 
