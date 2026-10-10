@@ -1,0 +1,11 @@
+# Copy to terraform.tfvars and adjust. terraform.tfvars is gitignored.
+# AWS credentials never go here: Terraform reads them from `aws configure` / environment variables.
+
+aws_region         = "ap-south-1"
+environment        = "dev"
+cluster_name       = "gittogether-eks"
+kubernetes_version = "1.36"
+vpc_cidr           = "10.20.0.0/16"
+node_instance_type = "t3.medium"
+node_desired_size  = 3
+node_max_size      = 4

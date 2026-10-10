@@ -1,4 +1,12 @@
+# Local provider/module downloads and state: never commit (state can contain secrets).
 .terraform/
 *.tfstate
 *.tfstate.*
-.terraform.lock.hcl
+crash.log
+tfplan
+
+# Real variable values stay local; the example file is committed.
+*.tfvars
+!*.tfvars.example
+
+# .terraform.lock.hcl IS committed so everyone gets the same provider versions.

@@ -1,17 +1,52 @@
-# Terraform lab
+# Terraform: AWS VPC + EKS for GitTogether
 
-This folder teaches Infrastructure as Code by provisioning the AWS VPC and EKS cluster used by the production-style TaskBoard deployment.
+Provisions, in `ap-south-1` (Mumbai):
 
-The module-based approach keeps the lesson focused on Terraform concepts: providers, variables, modules, state, plan/apply, outputs and dependency graphs.
+| Resource | Details |
+|---|---|
+| VPC | `10.20.0.0/16` across two AZs: 2 public subnets (load balancer, NAT), 2 private subnets (worker nodes), internet gateway, 1 NAT gateway |
+| EKS cluster | Kubernetes 1.36, pinned to **standard** support |
+| Managed node group | 3 × `t3.medium` on-demand (min 2, max 4) in private subnets, Amazon Linux 2023 |
+| EKS add-ons | vpc-cni, kube-proxy, coredns, pod-identity-agent, aws-ebs-csi-driver, metrics-server |
 
-> Cost warning: an EKS cluster and NAT gateway can incur AWS charges. Destroy classroom infrastructure when finished.
+Modules: `terraform-aws-modules/vpc/aws` 6.7.3 and `terraform-aws-modules/eks/aws` 21.25.3.
+
+## Cost decisions
+
+EKS is never free. While the cluster exists it costs roughly **$0.35/hour** (control plane $0.10, three nodes ~$0.13, NAT gateway ~$0.06, load balancer and public IPs ~$0.05). Nothing is billed between `terraform destroy` and the next `apply`. Choices:
+
+- **Worker nodes in private subnets** behind a NAT gateway, the production pattern: nodes have no public IPs.
+- **A single NAT gateway** shared by both AZs instead of one per AZ (halves the NAT cost; acceptable for a non-production cluster).
+- **3 nodes, not 2.** A `t3.medium` runs at most 17 pods; the app, Prometheus/Grafana and ArgoCD need more than 34.
+- **No customer-managed KMS key or CloudWatch control-plane logs.** Both bill monthly and would outlive a short demo.
+- **Kubernetes version in standard support.** Versions in extended support cost $0.60/hr for the control plane instead of $0.10/hr.
+- **On-demand nodes, not spot.** Spot is cheaper but can be reclaimed in the middle of a demo.
+
+## Usage
 
 ```bash
+cp terraform.tfvars.example terraform.tfvars   # optional; the defaults match it
 terraform init
-terraform fmt -recursive
-terraform validate
-terraform plan
-terraform apply
-aws eks update-kubeconfig --region ap-south-1 --name taskboard-eks
+terraform fmt -check && terraform validate
+terraform plan -out=tfplan
+terraform apply tfplan                          # ~15-20 minutes
+
+aws eks update-kubeconfig --region ap-south-1 --name gittogether-eks
+kubectl get nodes
+```
+
+AWS credentials come from `aws configure`. They are never stored in this folder.
+
+## Destroying (same day, every time)
+
+Kubernetes creates some AWS resources itself (the Ingress load balancer and the PostgreSQL EBS volume). Terraform doesn't know about them, so remove them first or `terraform destroy` will hang on the VPC and leave paid volumes behind:
+
+```bash
+helm uninstall gittogether -n gittogether        # app + its PersistentVolumeClaim
+kubectl delete pvc --all -n gittogether
+helm uninstall ingress-nginx -n ingress-nginx    # deletes the AWS load balancer
+kubectl get svc -A | grep LoadBalancer           # must print nothing
 terraform destroy
 ```
+
+Afterwards, check the AWS console (EC2 → Load Balancers, Volumes; VPC → Your VPCs) for anything tagged `Project = gittogether`.
