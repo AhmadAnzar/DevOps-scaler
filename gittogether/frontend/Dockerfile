@@ -8,7 +8,10 @@ RUN npm run build
 
 # ---- Runtime stage: serve static files with a non-root Nginx ----
 # nginx-unprivileged runs as uid 101 and listens on 8080 (ports < 1024 need root).
-FROM nginxinc/nginx-unprivileged:1.27-alpine
+FROM nginxinc/nginx-unprivileged:1.30-alpine
+# Pull the latest Alpine security fixes at build time (Trivy flagged packages in older base images).
+USER root
+RUN apk upgrade --no-cache
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 USER 101
